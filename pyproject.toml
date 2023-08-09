@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "sqlalchemy-loadump"
+version = "0.1.0"
+description = "This library makes your software to dump and load data in databases with sqlalchemy."
+authors = ["wintermaples <pg.wintermaples@gmail.com>"]
+license = "Apache License Version 2.0"
+readme = "README.md"
+packages = [{include = "sqlalchemy_loadump"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+sqlalchemy = "^2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "23.7.0"
+psycopg2 = "^2.9.7"
+mypy = "^1.4.1"
+pyodbc = "^4.0.39"
+
+[tool.black]
+line-length = 99
+skip-magic-trailing-comma = false
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

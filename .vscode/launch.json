@@ -1,0 +1,72 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run: SQLServer/Dump",
+            "type": "python",
+            "request": "launch",
+            "module": "sqlalchemy_loadump",
+            "args": [
+                "dump",
+                "--dump-file-type", "json",
+                "--db-url" ,"mssql+pyodbc:///?odbc_connect=DRIVER%3DSQL%2BServer%3BSERVER%3Dlocalhost%3BUID%3Dtest%3BPWD%3Dtest;DATABASE%3Dtest",
+                "--engine-options", "use_setinputsizes=False",
+                "--engine-options", "echo=True",
+                "--schema", "dbo",
+                "--human-readable"
+            ],
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/src/"
+        },
+        {
+            "name": "Run: SQLServer/Load",
+            "type": "python",
+            "request": "launch",
+            "module": "sqlalchemy_loadump",
+            "args": [
+                "load",
+                "--dump-file-type", "json",
+                "--dump-file-path", "dump.json",
+                "--db-url" ,"mssql+pyodbc:///?odbc_connect=DRIVER%3DSQL%2BServer%3BSERVER%3Dlocalhost%3BUID%3Dtest%3BPWD%3Dtest;DATABASE%3Dtest",
+                "--engine-options", "use_setinputsizes=False",
+                "--engine-options", "echo=True",
+                "--schema", "dbo",
+            ],
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/src/"
+        },
+        {
+            "name": "Run: PostgreSQL/Dump",
+            "type": "python",
+            "request": "launch",
+            "module": "sqlalchemy_loadump",
+            "args": [
+                "dump",
+                "--dump-file-type", "json",
+                "--db-url" ,"postgresql+psycopg2://user:password@localhost:5432/test",
+                "--engine-options", "echo=True",
+                "--human-readable"
+            ],
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/src/"
+        },
+        {
+            "name": "Run: PostgreSQL/Load",
+            "type": "python",
+            "request": "launch",
+            "module": "sqlalchemy_loadump",
+            "args": [
+                "load",
+                "--dump-file-type", "json",
+                "--dump-file-path", "dump.json",
+                "--db-url" ,"postgresql+psycopg2://user:password@localhost:5432/test",
+                "--engine-options", "echo=True",
+            ],
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/src/"
+        }
+    ]
+}
