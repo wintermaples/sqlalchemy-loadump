@@ -5,7 +5,10 @@ description = "This library makes your software to dump and load data in databas
 authors = ["wintermaples <pg.wintermaples@gmail.com>"]
 license = "Apache License Version 2.0"
 readme = "README.md"
-packages = [{include = "sqlalchemy_loadump"}]
+packages = [
+    { include = "sqlalchemy_loadump", from = "src" }
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.8"
