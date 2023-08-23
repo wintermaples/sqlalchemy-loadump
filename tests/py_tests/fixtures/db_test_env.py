@@ -9,3 +9,5 @@ from py_tests.fixtures.transaction import Transaction
 class DBTestEnvironment:
     db_type: Literal['mssql', 'postgres']
     transaction: Transaction
+    schema: str
+    

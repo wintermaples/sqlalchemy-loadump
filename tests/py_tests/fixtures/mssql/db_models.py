@@ -11,13 +11,13 @@ from sqlalchemy.types import SmallInteger, String, Text, Time, Unicode, UnicodeT
 Base = declarative_base()
 
 
-class EnumClass(enum.Enum):
+class EnumOfEnumTypeTestTable(enum.Enum):
     A = 1
     B = 2
     C = 3
 
 
-class TypeTest(Base):
+class TypeTestTable(Base):
     __tablename__ = "type_test"
     id_ = Column(Integer, primary_key=True)
     big_integer = Column(BigInteger)
@@ -25,7 +25,7 @@ class TypeTest(Base):
     date = Column(Date)
     date_time = Column(DateTime)
     double_ = Column(Double)
-    enum = Column(Enum(EnumClass))
+    enum = Column(Enum(EnumOfEnumTypeTestTable))
     float_ = Column(Float)
     integer = Column(Integer)
     interval = Column(Interval)

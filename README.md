@@ -73,8 +73,3 @@ Installing dependencies for this library.
 ```commandline
 poetry install
 ```
-
-### Run tests
-```commandline
-docker compose up --exit-code-from tester; docker compose down; docker image rm sqlalchemy-loadump-mssql sqlalchemy-loadump-postgres sqlalchemy-loadump-tester;
-```

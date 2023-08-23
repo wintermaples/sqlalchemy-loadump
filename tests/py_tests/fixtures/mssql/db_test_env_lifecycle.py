@@ -3,7 +3,7 @@ from decimal import Decimal
 from uuid import uuid4
 
 from sqlalchemy import Engine, text
-from py_tests.fixtures.db_models_for_test import Base, EnumClass, TypeTest
+from py_tests.fixtures.mssql.db_models import Base, EnumOfEnumTypeTestTable, TypeTestTable
 from py_tests.fixtures.db_test_env_lifecycle import DBTestEnvironmentLifecycle
 from py_tests.fixtures.db_test_env import DBTestEnvironment
 from py_tests.fixtures.transaction import Transaction
@@ -22,14 +22,14 @@ class MSSQLDBTestEnvironmentLifecycle(DBTestEnvironmentLifecycle):
         Base.metadata.create_all(bind=tx.engine)
 
         # Insert test data
-        type_test = TypeTest(
+        type_test = TypeTestTable(
             id_=1,
             big_integer=2**31 - 1,
             boolean=False,
             date=datetime.date.today(),
             date_time=datetime.datetime.now(),
             double_=0.1,
-            enum=EnumClass.A,
+            enum=EnumOfEnumTypeTestTable.A,
             float_=0.1,
             integer=2**15 - 1,
             interval=datetime.timedelta(days=10),

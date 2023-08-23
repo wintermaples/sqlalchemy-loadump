@@ -12,7 +12,6 @@ from sqlalchemy.orm import sessionmaker
 from py_tests.fixtures import db_test_env_lifecycle
 from py_tests.fixtures.db_test_env_lifecycle import DBTestEnvironmentLifecycle
 
-from py_tests.fixtures.db_models_for_test import Base, EnumClass, TypeTest
 from py_tests.fixtures.postgres.db_test_env_lifecycle import PostgresDBTestEnvironmentLifecycle
 from py_tests.fixtures.transaction import NoCommitTransaction, Transaction
 from py_tests.fixtures.db_test_env import DBTestEnvironment
@@ -66,12 +65,16 @@ db_test_env_lifecycle_map: Dict[str, DBTestEnvironmentLifecycle] = {
     "postgres": PostgresDBTestEnvironmentLifecycle(),
 }
 
+db_schema_map = {
+    'mssql': 'dbo',
+    'postgres': None,
+}
 
 @pytest.fixture(params=["mssql", "postgres"], scope="session")
 def db_test_env(request) -> Generator[DBTestEnvironment, None, None]:
     db_type = request.param
-
     db_test_env_lifecycle = db_test_env_lifecycle_map[db_type]
+    db_schema = db_schema_map[db_type]
 
     # Setup engine
     engine_for_middleware_lifecycle = create_engine(
@@ -86,7 +89,7 @@ def db_test_env(request) -> Generator[DBTestEnvironment, None, None]:
         with Session() as session:
             tx = NoCommitTransaction(session, engine)
             with tx:
-                env = DBTestEnvironment(db_type, tx)
+                env = DBTestEnvironment(db_type, tx, db_schema)
                 db_test_env_lifecycle.setup_db(tx)
                 yield env
     engine.dispose()
