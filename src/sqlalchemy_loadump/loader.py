@@ -2,7 +2,7 @@ from sqlite3 import IntegrityError
 import warnings
 from typing import Any, Dict, List, Optional
 
-from sqlalchemy import Table, insert, select, MetaData, create_engine
+from sqlalchemy import Table, delete, insert, select, MetaData, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 
@@ -30,8 +30,11 @@ class Loader:
                 if table is None:
                     raise IntegrityError(f"Table {table_name} not found in database.")
 
-                for row in rows:
-                    stmt = insert(table).values(**row)
-                    session.execute(stmt)
+                # Bulk insert
+                if len(rows) > 0:
+                    session.execute(
+                        insert(table),
+                        rows,
+                    )
 
             session.commit()
