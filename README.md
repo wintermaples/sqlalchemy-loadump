@@ -7,6 +7,12 @@ This library makes your software to dump and load data in databases with sqlalch
 - SQLAlchemy 2.0+
 
 
+## Development dependencies
+- Poetry
+- Docker
+- Docker Compose
+
+
 ## Installation
 ### Latest version
 ```pip install sqlalchemy-loadump```
@@ -48,3 +54,27 @@ python -m sqlalchemy_loadump load \
 ## Supported Databases
 - PostgreSQL
 - Microsoft SQLServer
+
+
+## Development Setup
+### Install docker & docker-compose
+This library uses docker & docker-compose to test.
+
+You can install docker & docker-compose by following [this link](https://docs.docker.com/engine/install/).
+
+### Install poetry
+This library uses poetry to manage dependencies and build.
+
+You can install poetry by following [this link](https://python-poetry.org/docs/).
+
+### Install dependencies
+Installing dependencies for this library.
+
+```commandline
+poetry install
+```
+
+### Run tests
+```commandline
+docker compose up --exit-code-from tester; docker compose down; docker image rm sqlalchemy-loadump-mssql sqlalchemy-loadump-postgres sqlalchemy-loadump-tester;
+```
