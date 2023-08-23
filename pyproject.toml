@@ -3,11 +3,18 @@ name = "sqlalchemy-loadump"
 version = "0.2.0"
 description = "This library makes your software to dump and load data in databases with sqlalchemy."
 authors = ["wintermaples <pg.wintermaples@gmail.com>"]
-license = "Apache License Version 2.0"
+license = "Apache-2.0"
 readme = "README.md"
 packages = [
     { include = "sqlalchemy_loadump", from = "src" }
 ]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Topic :: Database",
+    "Topic :: Utilities",
+]
+repository = "https://github.com/wintermaples/sqlalchemy-loadump"
 
 
 [tool.poetry.dependencies]

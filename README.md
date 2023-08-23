@@ -1,18 +1,19 @@
 # sqlalchemy-loadump
 This library makes your software to dump and load data in databases with sqlalchemy.
 
+
 ## Dependencies
 - Python 3.8+
 - SQLAlchemy 2.0+
 
+
 ## Installation
-**!!!!! Needs poetry !!!!!** 
+### Latest version
+```pip install sqlalchemy-loadump```
 
-It will install the library from github.
+### Specific version(e.g. 0.1.1)
+```pip install sqlalchemy-loadump==0.1.1```
 
-```commandline
-poetry add git+ssh://git@github.com:wintermaples/sqlalchemy-loadump.git
-```
 
 ## Usage
 ### Commandline
@@ -42,6 +43,7 @@ python -m sqlalchemy_loadump load \
 
 ## Supported Dump Formats
 - JSON
+
 
 ## Supported Databases
 - PostgreSQL
