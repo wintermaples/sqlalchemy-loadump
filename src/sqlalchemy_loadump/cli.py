@@ -6,12 +6,15 @@ from ssl import Options
 import sys
 from typing import Any, Dict, List, Optional, Union
 
+from sqlalchemy import create_engine
+
 from sqlalchemy_loadump.dumper import Dumper
 from sqlalchemy_loadump.importer_switcher import default_importer_switcher
 from sqlalchemy_loadump.exporter_switcher import default_exporter_switcher
 from sqlalchemy_loadump.importer.importer import Importer
 from sqlalchemy_loadump.loader import Loader
 from sqlalchemy_loadump.version import get_version
+from sqlalchemy.orm import sessionmaker
 
 
 class CliMode(metaclass=abc.ABCMeta):
@@ -37,8 +40,11 @@ class DumpCliMode(CliMode):
         self.human_readable = human_readable
 
     def run(self):
-        dumper: Dumper = Dumper(self.db_url, self.engine_options, self.schema)
-        dump_data = dumper.dump()
+        engine = create_engine(self.db_url, **self.engine_options)
+        session_maker = sessionmaker(bind=engine)
+        with session_maker() as session:
+            dumper: Dumper = Dumper(engine, session, self.schema)
+            dump_data = dumper.dump()
 
         exporter = default_exporter_switcher.get_route(self.dump_file_type)
         if exporter is None:
@@ -67,8 +73,11 @@ class LoadCliMode(CliMode):
             raise ValueError(f"Unknown dump file type: {self.dump_file_type}")
         dump_data = importer.import_from_file(self.dump_file_path)
 
-        loader = Loader(dump_data, self.db_url, self.engine_options, self.schema)
-        loader.load()
+        engine = create_engine(self.db_url, **self.engine_options)
+        session_maker = sessionmaker(bind=engine)
+        with session_maker() as session:
+            loader = Loader(dump_data, engine, session, self.schema)
+            loader.load()
 
 
 def build_parser() -> argparse.ArgumentParser:
