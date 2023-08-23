@@ -1,19 +1,19 @@
 import warnings
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
-from sqlalchemy import Table, select, MetaData, create_engine, text
+from sqlalchemy import Engine, Table, select, MetaData, create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
 
 class Dumper:
     def __init__(
         self,
-        db_url: str,
-        engine_options: Dict[str, Any] = {},
-        schema: Optional[str] = None,
+        engine: Engine,
+        session: Session,
+        schema: Optional[str],
     ):
-        self.db_url = db_url
-        self.engine_options = engine_options
+        self.engine = engine
+        self.session = session
         self.schema = schema
 
     @staticmethod
@@ -37,17 +37,16 @@ class Dumper:
         return rows
 
     def dump(self) -> Dict[str, List[Dict[str, Any]]]:
-        engine = create_engine(self.db_url, **self.engine_options)
-        session_maker = sessionmaker(bind=engine)
         metadata = MetaData(schema=self.schema)
-        metadata.reflect(bind=engine)
+        metadata.reflect(bind=self.engine)
 
-        with session_maker() as session:
-            # Table --> List of Data.
-            data_list_in_tables: Dict[str, List[Dict[str, Any]]] = {}
+        # Table --> List of Data.
+        data_list_in_tables: Dict[str, List[Dict[str, Any]]] = {}
 
-            for table in metadata.sorted_tables:
-                table_name_with_schema_name = ".".join(list(filter(lambda k: k is not None, [table.schema, table.name]))) # type: ignore
-                data_list_in_tables[table_name_with_schema_name] = self._dump_table(session, table)
+        for table in metadata.sorted_tables:
+            table_name_with_schema_name = ".".join(list(filter(lambda k: k is not None, [table.schema, table.name])))  # type: ignore
+            data_list_in_tables[table_name_with_schema_name] = self._dump_table(
+                self.session, table
+            )
 
-            return data_list_in_tables
+        return data_list_in_tables
