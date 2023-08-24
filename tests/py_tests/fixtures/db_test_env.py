@@ -7,7 +7,7 @@ from py_tests.fixtures.transaction import Transaction
 
 @dataclass
 class DBTestEnvironment:
-    db_type: Literal["mssql", "postgres"]
+    db_type: str
     transaction: Transaction
     schema: str
     setup_data: Dict[Type, List[Dict[str, Any]]]

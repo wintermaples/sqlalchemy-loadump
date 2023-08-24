@@ -78,6 +78,7 @@ class LoadCliMode(CliMode):
         with session_maker() as session:
             loader = Loader(dump_data, engine, session, self.schema)
             loader.load()
+            session.commit()
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -24,27 +24,23 @@ This library makes your software to dump and load data in databases with sqlalch
 ## Usage
 ### Commandline
 #### Dump
-This command dumps data in the postgresql database to the json file.
-
-**You need installing the database adapter before using this command. In below example, you need installing psycopg2.**
+This command dumps data in the sqlite3 database (db.sqlite3) to the json file.
 
 ```commandline
 python -m sqlalchemy_loadump dump \
 --dump-file-type=json \
 --dump-file-path=dump.json \
---db-url=postgresql+psycopg2://user:password@host:port/database
+--db-url=sqlite:///db.sqlite3
 ```
 
 #### Load
-This command loads data from the json file and inserts it into the postgresql database.
-
-**You need installing the database adapter before using this command. In below example, you need installing psycopg2.**
+This command loads data from the json file and inserts it into the sqlite3 database (db.sqlite3) database.
 
 ```commandline
 python -m sqlalchemy_loadump load \
 --dump-file-type=json \
 --dump-file-path=dump.json \
---db-url=postgresql+psycopg2://user:password@host:port/database
+--db-url=sqlite:///db.sqlite3
 ```
 
 ## Supported Dump Formats
@@ -52,10 +48,35 @@ python -m sqlalchemy_loadump load \
 
 
 ## Supported Databases
+- SQLite3
 - PostgreSQL
 - Microsoft SQLServer
 
 ## Supported(Tested) DataType List
+### SQLite3
+<details>
+    <summary>DataType List</summary>
+
+    - BigInteger
+    - Boolean
+    - Date
+    - DateTime
+    - Double
+    - Enum
+    - Float
+    - Integer
+    - (Interval) ・・・ Treated as DateTime
+    - LargeBinary
+    - Numeric
+    - SmallInteger
+    - String
+    - Text
+    - Time
+    - Unicode
+    - UnicodeText
+    - Uuid
+</details>
+
 ### PostgreSQL
 <details>
     <summary>DataType List</summary>
@@ -103,6 +124,16 @@ python -m sqlalchemy_loadump load \
     - UnicodeText
     - Uuid
 </details>
+
+## Limitation of the result of dumping. 
+The python type of the result of convertion depends on the column type of table reflected by MetaData.reflect.
+
+As a result, there is a possibility of losing type information from the dumped data.
+
+For instance, using SQLite3, when creating a table with a UUID(SQLAlchemy) column and then dumping it, the dumped result will become a string type.
+
+However, for the types listed in the "Supported DataType List," we ensure the proper dumping and loading of data.
+
 
 ## Development Setup
 ### Install docker & docker-compose

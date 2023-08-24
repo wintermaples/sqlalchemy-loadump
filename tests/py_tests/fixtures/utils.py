@@ -2,6 +2,7 @@ import enum
 import os
 from logging import warning
 from typing import Any, Dict, List, Optional, Type
+from uuid import UUID
 
 import pytest
 
@@ -59,5 +60,12 @@ def assert_is_same_db_data(
                 # If the type of col_val in raw_data is Enum, db_data will be str of Enum's key.
                 if isinstance(col1_val, enum.Enum):
                     col1_val = col1_val.name
+                
+                # UUID can be str (For sqlite3)
+                if isinstance(col1_val, UUID):
+                    col1_val = col1_val.hex.replace('-', '')
+                if isinstance(col2_val, UUID):
+                    col2_val = col2_val.hex.replace('-', '')
+
                 assert col1_name == col2_name
                 assert col1_val == col2_val
