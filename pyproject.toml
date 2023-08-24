@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sqlalchemy-loadump"
-version = "0.1.1"
+version = "0.2.0"
 description = "This library makes your software to dump and load data in databases with sqlalchemy."
 authors = ["wintermaples <pg.wintermaples@gmail.com>"]
 license = "Apache-2.0"
@@ -27,6 +27,7 @@ black = "23.7.0"
 psycopg2 = "^2.9.7"
 mypy = "^1.4.1"
 pyodbc = "^4.0.39"
+pytest = "^7.4.0"
 
 [tool.black]
 line-length = 99

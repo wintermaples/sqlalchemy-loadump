@@ -2,7 +2,7 @@ from sqlite3 import IntegrityError
 import warnings
 from typing import Any, Dict, List, Optional
 
-from sqlalchemy import Table, delete, insert, select, MetaData, create_engine
+from sqlalchemy import Engine, Table, delete, insert, select, MetaData, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 
@@ -10,31 +10,27 @@ class Loader:
     def __init__(
         self,
         dump_data: Dict[str, List[Dict[str, Any]]],
-        db_url: str,
-        engine_options: Dict[str, Any] = {},
-        schema: Optional[str] = None,
+        engine: Engine,
+        session: Session,
+        schema: Optional[str],
     ):
         self.dump_data = dump_data
-        self.db_url = db_url
-        self.engine_options = engine_options
+        self.engine = engine
+        self.session = session
         self.schema = schema
 
     def load(self) -> None:
-        engine = create_engine(self.db_url, **self.engine_options)
-        session_maker = sessionmaker(bind=engine)
         metadata = MetaData(schema=self.schema)
-        metadata.reflect(bind=engine)
-        with session_maker() as session:
-            for table_name, rows in self.dump_data.items():
-                table = metadata.tables.get(table_name)
-                if table is None:
-                    raise IntegrityError(f"Table {table_name} not found in database.")
+        metadata.reflect(bind=self.engine)
 
-                # Bulk insert
-                if len(rows) > 0:
-                    session.execute(
-                        insert(table),
-                        rows,
-                    )
+        for table_name, rows in self.dump_data.items():
+            table = metadata.tables.get(table_name)
+            if table is None:
+                raise IntegrityError(f"Table {table_name} not found in database.")
 
-            session.commit()
+            # Bulk insert
+            if len(rows) > 0:
+                self.session.execute(
+                    insert(table),
+                    rows,
+                )

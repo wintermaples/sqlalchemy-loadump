@@ -5,19 +5,33 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from _decimal import Decimal
+import uuid
 
 from sqlalchemy_loadump.exporter.exporter import Exporter
 
 
 class JSONExporter(Exporter):
     class SQLAlchemyTypesJSONEncoder(json.JSONEncoder):
+        datetime.timedelta()
         def default(self, obj):
             if isinstance(obj, Decimal):
                 return {"type": "decimal", "value": str(obj)}
             elif isinstance(obj, datetime.datetime):
                 return {"type": "datetime", "value": obj.isoformat()}
+            elif isinstance(obj, datetime.date):
+                return {"type": "date", "value": obj.isoformat()}
+            elif isinstance(obj, datetime.time):
+                return {"type": "time", "value": obj.isoformat()}
+            elif isinstance(obj, datetime.timedelta):
+                return {"type": "timedelta", "value": {
+                    "days": obj.days,
+                    "seconds": obj.seconds,
+                    "microseconds": obj.microseconds,
+                }}
             elif isinstance(obj, bytes):
                 return {"type": "bytes", "value": b64encode(obj).decode("utf-8")}
+            elif isinstance(obj, uuid.UUID):
+                return {"type": "uuid", "value": obj.hex}
             return json.JSONEncoder.default(self, obj)
 
     def export_to_file(

@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  mssql:
+    image: sqlalchemy-loadump-mssql
+    build:
+      context: ../../
+      dockerfile: ./tests/docker/mssql/Dockerfile
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: sqlalchemy_loadump_password0
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -U sa -P sqlalchemy_loadump_password0 -Q 'select 1'"]
+      interval: 3s
+      retries: 20
+  postgres:
+    image: sqlalchemy-loadump-postgres
+    build:
+      context: ../../
+      dockerfile: ./tests/docker/postgres/Dockerfile
+    environment:
+      POSTGRES_PASSWORD: sqlalchemy_loadump_password0
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username=postgres || exit 1"]
+      interval: 3s
+      retries: 20
+  tester:
+    image: sqlalchemy-loadump-tester
+    build:
+      context: ../../
+      dockerfile: ./tests/docker/tester/Dockerfile
+    depends_on:
+      mssql:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      MSSQL_USER: sa
+      MSSQL_PASSWORD: sqlalchemy_loadump_password0
+      MSSQL_HOST: mssql
+      MSSQL_PORT: 1433
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sqlalchemy_loadump_password0
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      TEST_DB_NAME: ____sqlalchemy_loadump_test____

@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    branches:
+      - main
+      - 'v*'
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Test
+        run: cd tests/docker/; docker compose up --exit-code-from tester
