@@ -18,4 +18,4 @@ RUN pip install poetry
 COPY ./ ./
 RUN poetry install
 
-ENTRYPOINT ["poetry", "run", "pytest", "tests/py_tests/"]
+ENTRYPOINT ["poetry", "run", "pytest", "-s", "tests/py_tests/"]

@@ -55,6 +55,54 @@ python -m sqlalchemy_loadump load \
 - PostgreSQL
 - Microsoft SQLServer
 
+## Supported(Tested) DataType List
+### PostgreSQL
+<details>
+    <summary>DataType List</summary>
+
+    - BigInteger
+    - Boolean
+    - Date
+    - DateTime
+    - Double
+    - Enum
+    - Float
+    - Integer
+    - Interval
+    - LargeBinary
+    - Numeric
+    - SmallInteger
+    - String
+    - Text
+    - Time
+    - Unicode
+    - UnicodeText
+    - Uuid
+</details>
+
+### Microsoft SQLServer
+<details>
+    <summary>DataType List</summary>
+
+    - BigInteger
+    - Boolean
+    - Date
+    - DateTime
+    - Double
+    - Enum
+    - Float
+    - Integer
+    - (Interval) ・・・ Treated as DateTime
+    - LargeBinary
+    - Numeric
+    - SmallInteger
+    - String
+    - Text
+    - Time
+    - Unicode
+    - UnicodeText
+    - Uuid
+</details>
 
 ## Development Setup
 ### Install docker & docker-compose
