@@ -3,6 +3,7 @@ from decimal import Decimal
 import json
 from pathlib import Path
 from typing import Any, Dict, List
+import uuid
 from sqlalchemy_loadump.importer.importer import Importer
 from base64 import b64decode
 
@@ -21,8 +22,16 @@ class JSONImporter(Importer):
             return Decimal(value)
         elif type_name == "datetime":
             return datetime.datetime.fromisoformat(value)
+        elif type_name == "date":
+            return datetime.date.fromisoformat(value)
+        elif type_name == "time":
+            return datetime.time.fromisoformat(value)
+        elif type_name == "timedelta":
+            return datetime.timedelta(**value)
         elif type_name == "bytes":
             return b64decode(value)
+        elif type_name == "uuid":
+            return uuid.UUID(value)
         else:
             raise ValueError(f"Unknown type: {type_name}")
 
