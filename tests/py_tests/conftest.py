@@ -9,6 +9,7 @@ from py_tests.fixtures.db_test_env import DBTestEnvironment
 from py_tests.fixtures.db_test_env_lifecycle import DBTestEnvironmentLifecycle
 from py_tests.fixtures.mssql.db_test_env_lifecycle import MSSQLDBTestEnvironmentLifecycle
 from py_tests.fixtures.postgres.db_test_env_lifecycle import PostgresDBTestEnvironmentLifecycle
+from py_tests.fixtures.sqlite3.db_test_env_lifecycle import SQLite3DBTestEnvironmentLifecycle
 from py_tests.fixtures.transaction import NoCommitTransaction
 from py_tests.fixtures.utils import get_env_or_default_with_warn
 from sqlalchemy import URL, create_engine
@@ -33,6 +34,10 @@ db_url_map_for_middleware_lifecycle = {
         host=get_env_or_default_with_warn("POSTGRES_HOST", "localhost"),
         port=int(get_env_or_default_with_warn("POSTGRES_PORT", "5432")),
     ),
+    "sqlite3": URL.create(
+        "sqlite",
+        database="sqlalchemy_loadump_test.sqlite3"
+    ),
 }
 
 db_url_map = {
@@ -53,20 +58,26 @@ db_url_map = {
         port=int(get_env_or_default_with_warn("POSTGRES_PORT", "5432")),
         database=test_db_name,
     ),
+    "sqlite3": URL.create(
+        "sqlite",
+        database="sqlalchemy_loadump_test.sqlite3"
+    ),
 }
 
 db_test_env_lifecycle_map: Dict[str, DBTestEnvironmentLifecycle] = {
     "mssql": MSSQLDBTestEnvironmentLifecycle(),
     "postgres": PostgresDBTestEnvironmentLifecycle(),
+    "sqlite3": SQLite3DBTestEnvironmentLifecycle(),
 }
 
 db_schema_map = {
     "mssql": "dbo",
     "postgres": None,
+    "sqlite3": None,
 }
 
 
-@pytest.fixture(params=["mssql", "postgres"], scope="session")
+@pytest.fixture(params=["mssql", "postgres", "sqlite3"], scope="session")
 def db_test_env(request) -> Generator[DBTestEnvironment, None, None]:
     db_type = request.param
     db_test_env_lifecycle = db_test_env_lifecycle_map[db_type]
